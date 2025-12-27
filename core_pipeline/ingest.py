@@ -14,6 +14,7 @@ import logging
 from pathlib import Path
 import urllib.request
 
+logging.getLogger().setLevel(logging.INFO)
 
 DATA_DIRECTORY: Path = Path("data/raw")
 DATA_DIRECTORY.mkdir(parents=True, exist_ok=True)
