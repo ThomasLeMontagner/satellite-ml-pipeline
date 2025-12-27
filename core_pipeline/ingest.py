@@ -28,7 +28,7 @@ OUTPUT_FILE: Path = DATA_DIRECTORY / "sample.tif"
 def download_sample() -> None:
     """Download a sample GeoTIFF file if it does not already exist locally."""
     if OUTPUT_FILE.exists():
-        logging.info("File already exists: {OUTPUT_FILE}")
+        logging.info(f"File already exists: {OUTPUT_FILE}")
         return
 
     logging.info("Downloading sample GeoTIFF...")
