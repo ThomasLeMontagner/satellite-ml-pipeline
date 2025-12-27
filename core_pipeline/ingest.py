@@ -16,7 +16,7 @@ import urllib.request
 
 logging.getLogger().setLevel(logging.INFO)
 
-DATA_DIRECTORY: Path = Path("data/raw")
+DATA_DIRECTORY: Path = Path("../data/raw")
 DATA_DIRECTORY.mkdir(parents=True, exist_ok=True)
 
 SAMPLE_URL: str = "https://download.osgeo.org/geotiff/samples/usgs/o41078a5.tif"

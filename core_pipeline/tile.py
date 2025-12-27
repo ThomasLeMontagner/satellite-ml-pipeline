@@ -48,7 +48,7 @@ def generate_tiles(input_tif: Path, output_path: Path, tile_size: int = 256) -> 
 
 if __name__ == "__main__":
     generate_tiles(
-        input_tif=Path("data/raw/sample.tif"),
-        output_path=Path("data/tiles"),
+        input_tif=Path("../data/raw/sample.tif"),
+        output_path=Path("../data/tiles"),
         tile_size=256,
     )
