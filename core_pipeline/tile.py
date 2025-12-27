@@ -19,6 +19,7 @@ from rasterio.windows import Window
 
 from core_pipeline.constants import RAW_DATA_DIRECTORY, DATA_DIRECTORY
 from core_pipeline.exceptions import TileSizeTypeError, TileSizeValueError
+from core_pipeline.validate import validate_raster
 
 
 def generate_tiles(input_tif: Path, output_path: Path, tile_size: int = 256) -> None:
@@ -30,6 +31,7 @@ def generate_tiles(input_tif: Path, output_path: Path, tile_size: int = 256) -> 
     if tile_size <= 0:
         raise TileSizeValueError(tile_size)
 
+    validate_raster(input_tif)
     output_path.mkdir(parents=True, exist_ok=True)
 
     with rasterio.open(input_tif) as source:
