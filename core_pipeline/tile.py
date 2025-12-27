@@ -67,7 +67,7 @@ def generate_tiles(input_tif: Path, output_path: Path, tile_size: int = 256) -> 
 
                 tile_id += 1
 
-    logging.info(f"Generated {tile_id} tiles")
+    logging.info("Generated %s tiles", tile_id)
 
 
 if __name__ == "__main__":

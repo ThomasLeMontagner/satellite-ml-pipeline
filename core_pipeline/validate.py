@@ -78,7 +78,7 @@ def validate_raster(path: Path) -> None:
         validate_dimensions(src.width, src.height)
         validate_dtype(src.dtypes[0])
 
-    logging.info(f"Validation passed for raster: {path}")
+    logging.info("Validation passed for raster: %s", path)
 
 
 if __name__ == "__main__":
