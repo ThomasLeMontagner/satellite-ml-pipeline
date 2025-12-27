@@ -18,15 +18,14 @@ from core_pipeline.constants import DATA_DIRECTORY
 
 logging.getLogger().setLevel(logging.INFO)
 
-DATA_DIRECTORY.mkdir(parents=True, exist_ok=True)
-
 SAMPLE_URL: str = "https://download.osgeo.org/geotiff/samples/usgs/o41078a5.tif"
-
 OUTPUT_FILE: Path = DATA_DIRECTORY / "sample.tif"
 
 
 def download_sample() -> None:
     """Download a sample GeoTIFF file if it does not already exist locally."""
+    DATA_DIRECTORY.mkdir(parents=True, exist_ok=True)
+
     if OUTPUT_FILE.exists():
         logging.info(f"File already exists: {OUTPUT_FILE}")
         return
