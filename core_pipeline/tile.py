@@ -71,6 +71,7 @@ def generate_tiles(input_tif: Path, output_path: Path, tile_size: int = 256) -> 
 
 
 if __name__ == "__main__":
+    logging.getLogger().setLevel(logging.INFO)
     generate_tiles(
         input_tif=RAW_DATA_DIRECTORY / "sample.tif",
         output_path=DATA_DIRECTORY / "tiles",

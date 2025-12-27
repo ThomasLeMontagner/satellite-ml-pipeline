@@ -16,7 +16,6 @@ import urllib.request
 
 from core_pipeline.constants import RAW_DATA_DIRECTORY
 
-logging.getLogger().setLevel(logging.INFO)
 
 SAMPLE_URL: str = "https://download.osgeo.org/geotiff/samples/usgs/o41078a5.tif"
 OUTPUT_FILE: Path = RAW_DATA_DIRECTORY / "sample.tif"
@@ -36,4 +35,5 @@ def download_sample() -> None:
 
 
 if __name__ == "__main__":
+    logging.getLogger().setLevel(logging.INFO)
     download_sample()
