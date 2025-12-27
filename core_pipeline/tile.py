@@ -24,14 +24,13 @@ from core_pipeline.validate import validate_raster
 
 def generate_tiles(input_tif: Path, output_path: Path, tile_size: int = 256) -> None:
     """Split a raster image into fixed-size tiles and write them to disk."""
-    if not input_tif.exists():
-        raise FileNotFoundError(input_tif.name)
+    validate_raster(input_tif)
+
     if not isinstance(tile_size, int):
         raise TileSizeTypeError(tile_size)
     if tile_size <= 0:
         raise TileSizeValueError(tile_size)
 
-    validate_raster(input_tif)
     output_path.mkdir(parents=True, exist_ok=True)
 
     with rasterio.open(input_tif) as source:
