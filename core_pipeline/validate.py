@@ -68,8 +68,19 @@ def validate_dtype(dtype: str) -> None:
 
 
 def validate_raster(path: Path) -> None:
-    """
-    Perform basic validation checks on a raster file before processing.
+    """Run a sequence of validation checks on a raster file before processing.
+
+    The following checks are performed:
+    - The raster file exists on disk.
+    - The raster has a defined coordinate reference system (CRS).
+    - The raster width and height are positive, non-zero values.
+    - The raster band data type is one of the supported numeric types.
+
+    :param path: Filesystem path to the raster file to validate.
+    :raises FileNotFoundError: If the raster file does not exist.
+    :raises UndefinedCRSError: If the raster has no defined CRS.
+    :raises InvalidRasterDimensionsError: If the raster dimensions are invalid.
+    :raises ValueError: If the raster data type is not supported.
     """
     validate_raster_exists(path)
 
