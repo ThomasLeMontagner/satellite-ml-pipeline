@@ -19,9 +19,7 @@ logging.getLogger().setLevel(logging.INFO)
 DATA_DIRECTORY: Path = Path("data/raw")
 DATA_DIRECTORY.mkdir(parents=True, exist_ok=True)
 
-SAMPLE_URL: str = (
-    "https://download.osgeo.org/geotiff/samples/usgs/o41078a5.tif"
-)
+SAMPLE_URL: str = "https://download.osgeo.org/geotiff/samples/usgs/o41078a5.tif"
 
 OUTPUT_FILE: Path = DATA_DIRECTORY / "sample.tif"
 
