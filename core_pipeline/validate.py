@@ -51,7 +51,7 @@ def validate_dimensions(width: int, height: int) -> None:
 def validate_dtype(dtype: str) -> None:
     """Ensure that raster data type is suitable for numerical processing.
 
-    :raises: InvalidRasterDataTypeError if the raster data type is invalid.
+    :raises: ValueError if the raster data type is invalid.
     """
     allowed_dtypes: tuple[str, ...] = (
         "uint8",
