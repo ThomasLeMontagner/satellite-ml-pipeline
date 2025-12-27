@@ -22,6 +22,11 @@ from core_pipeline.constants import DATA_DIRECTORY
 
 def generate_tiles(input_tif: Path, output_path: Path, tile_size: int = 256) -> None:
     """Split a raster image into fixed-size tiles and write them to disk."""
+    if not isinstance(tile_size, int):
+        raise TypeError(f"tile_size must be an integer number of pixels. Received {type(tile_size)}")
+    if tile_size <= 0:
+        raise ValueError(f"tile_size must be a positive integer number of pixels. Received {tile_size}")
+
     output_path.mkdir(parents=True, exist_ok=True)
 
     with rasterio.open(input_tif) as source:
