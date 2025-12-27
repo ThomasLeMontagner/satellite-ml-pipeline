@@ -3,7 +3,7 @@
 ## Overview
 
 This project demonstrates a **production-oriented machine learning inference pipeline** for satellite imagery.  
-The focus is on **engineering concerns** — data ingestion, reproducibility, model versioning, batch and API inference, and observability — rather than on model complexity or state-of-the-art computer vision techniques.
+The focus is on **engineering concerns**, data ingestion, reproducibility, model versioning, batch and API inference, and observability, rather than on model complexity or state-of-the-art computer vision techniques.
 
 The pipeline operates on **open satellite imagery**, splits large raster images into tiles, and runs a lightweight ML model on each tile using both batch workflows and an online inference API.
 
