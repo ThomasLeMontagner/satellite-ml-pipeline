@@ -54,8 +54,8 @@ def generate_tiles(input_tif: Path, output_path: Path, tile_size: int = 256) -> 
                 tile_meta = source.meta.copy()
                 tile_meta.update(
                     {
-                        "height": height,
-                        "width": width,
+                        "height": tile_size,
+                        "width": tile_size,
                         "transform": tile_transform,
                     }
                 )
