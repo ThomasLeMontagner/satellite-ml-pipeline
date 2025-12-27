@@ -2,8 +2,6 @@
 
 from typing import Any
 
-from rasterio import CRS
-
 
 class PipelineException(Exception):
     """Base exception class for pipeline."""
@@ -32,9 +30,9 @@ class TileSizeValueError(PipelineException):
 class UndefinedCRSError(PipelineException):
     """Raised when a raster has an undefined coordinate reference system."""
 
-    def __init__(self, crs: CRS) -> None:
+    def __init__(self) -> None:
         """Initializes the exception with a specific message."""
-        message = "Raster has no CRS defined"
+        message = "Raster has no CRS defined."
         super().__init__(message)
 
 
