@@ -1,0 +1,61 @@
+[project]
+name = "satellite-ml-pipeline"
+version = "0.1.0"
+description = "Scalable Satellite Tile Inference Pipeline"
+readme = "README.md"
+requires-python = ">=3.8"
+
+[tool.ruff]
+# Set the maximum line length to 88 (Black's default)
+line-length = 88
+
+# Assume Python 3.8+
+target-version = "py38"
+
+# Exclude common directories
+exclude = [
+    ".git",
+    ".venv",
+    "venv",
+    "__pycache__",
+    "*.egg-info",
+    "build",
+    "dist",
+]
+
+[tool.ruff.lint]
+# Enable the following rule sets:
+# E - pycodestyle errors
+# F - pyflakes
+# I - isort (import sorting)
+# N - pep8-naming
+# W - pycodestyle warnings
+# UP - pyupgrade (modernize Python code)
+# B - flake8-bugbear (find likely bugs)
+# C4 - flake8-comprehensions (better list/dict/set comprehensions)
+# PIE - flake8-pie (miscellaneous lints)
+# SIM - flake8-simplify (simplification suggestions)
+select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "PIE", "SIM"]
+
+# Ignore specific rules if needed
+ignore = []
+
+# Allow unused variables when underscore-prefixed
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.lint.per-file-ignores]
+# Allow unused imports in __init__.py files
+"__init__.py" = ["F401"]
+
+[tool.ruff.format]
+# Use double quotes for strings
+quote-style = "double"
+
+# Indent with spaces
+indent-style = "space"
+
+# Like Black, respect magic trailing commas
+skip-magic-trailing-comma = false
+
+# Like Black, automatically detect the appropriate line ending
+line-ending = "auto"
