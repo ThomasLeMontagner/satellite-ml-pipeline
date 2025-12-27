@@ -1,3 +1,15 @@
+"""
+Data ingestion module for the satellite ML pipeline.
+
+Key design decisions:
+- Keep ingestion deterministic and idempotent: downloading the same dataset multiple
+  times should not create duplicates or side effects.
+- Separate ingestion from validation and preprocessing to keep responsibilities
+  clear and composable.
+- Use a small, openly available GeoTIFF sample to demonstrate geospatial handling
+  without introducing unnecessary dataset complexity at this stage.
+"""
+
 import logging
 from pathlib import Path
 import urllib.request
