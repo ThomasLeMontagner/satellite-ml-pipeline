@@ -76,7 +76,6 @@ def validate_raster(path: Path) -> None:
     - The raster width and height are positive, non-zero values.
     - The raster band data type is one of the supported numeric types.
 
-    :param path: Filesystem path to the raster file to validate.
     :raises FileNotFoundError: If the raster file does not exist.
     :raises UndefinedCRSError: If the raster has no defined CRS.
     :raises InvalidRasterDimensionsError: If the raster dimensions are invalid.
