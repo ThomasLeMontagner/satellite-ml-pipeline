@@ -62,8 +62,8 @@ def run_batch_inference(
     with open(output_path, "w") as f:
         json.dump(results, f, indent=2)
 
-    logging.info("Batch inference completed for %s tiles", {len(results)})
-    logging.info("Results written to %s", {output_path})
+    logging.info("Batch inference completed for %s tiles", len(results))
+    logging.info("Results written to %s", output_path)
 
 
 if __name__ == "__main__":
