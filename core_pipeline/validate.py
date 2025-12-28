@@ -36,7 +36,7 @@ def validate_crs(crs: CRS | None) -> None:
     :raises: UndefinedCRSError if the raster has no coordinate reference system.
     """
     if crs is None:
-        raise UndefinedCRSError
+        raise UndefinedCRSError()
 
 
 def validate_dimensions(width: int, height: int) -> None:
