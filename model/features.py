@@ -9,10 +9,19 @@ Key design decisions:
 
 from __future__ import annotations
 
+from typing import TypedDict
+
 import numpy as np
 
 
-def extract_features(tile: np.ndarray) -> dict[str, float]:
+class Features(TypedDict):
+    """Format of extracted features."""
+
+    mean_intensity: float
+    std_intensity: float
+
+
+def extract_features(tile: np.ndarray) -> Features:
     """Extract simple statistical features from a raster tile."""
     flattened = tile.astype(np.float32).ravel()
 

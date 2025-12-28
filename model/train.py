@@ -9,9 +9,19 @@ Key design decisions:
 from pathlib import Path
 import json
 import uuid
+from typing import TYPE_CHECKING, TypedDict
+
+if TYPE_CHECKING:
+    from model.features import Features
 
 
-def train_model(features: dict[str, float]) -> dict[str, float]:
+class Model(TypedDict):
+    """A trained model."""
+
+    threshold: float
+
+
+def train_model(features: Features) -> Model:
     """Train a simple threshold-based model from aggregated features."""
     threshold = features["mean_intensity"]
 
@@ -20,7 +30,7 @@ def train_model(features: dict[str, float]) -> dict[str, float]:
     }
 
 
-def save_model(model: dict[str, float], output_dir: Path) -> Path:
+def save_model(model: Model, output_dir: Path) -> Path:
     """Serialize a trained model artifact to disk with a unique version."""
     output_dir.mkdir(parents=True, exist_ok=True)
 
