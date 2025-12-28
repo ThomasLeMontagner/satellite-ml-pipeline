@@ -26,12 +26,12 @@ def download_sample() -> None:
     RAW_DATA_DIRECTORY.mkdir(parents=True, exist_ok=True)
 
     if OUTPUT_FILE.exists():
-        logging.info(f"File already exists: {OUTPUT_FILE}")
+        logging.info("File already exists: %s", OUTPUT_FILE)
         return
 
     logging.info("Downloading sample GeoTIFF...")
     urllib.request.urlretrieve(SAMPLE_URL, OUTPUT_FILE)
-    logging.info(f"Saved to {OUTPUT_FILE}")
+    logging.info("Saved to %s", OUTPUT_FILE)
 
 
 if __name__ == "__main__":

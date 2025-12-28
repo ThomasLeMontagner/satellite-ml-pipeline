@@ -25,3 +25,21 @@ class TileSizeValueError(PipelineException):
         """Initializes the exception with a specific message."""
         message = f"tile_size must be a positive integer number of pixels. Received {tile_size}"
         super().__init__(message)
+
+
+class UndefinedCRSError(PipelineException):
+    """Raised when a raster has an undefined coordinate reference system."""
+
+    def __init__(self) -> None:
+        """Initializes the exception with a specific message."""
+        message = "Raster has no CRS defined."
+        super().__init__(message)
+
+
+class InvalidRasterDimensionsError(PipelineException):
+    """Raised when a raster dimension is invalid."""
+
+    def __init__(self, height: int, width: int) -> None:
+        """Initializes the exception with a specific message."""
+        message = f"Invalid raster dimensions: width={width}, height={height}"
+        super().__init__(message)

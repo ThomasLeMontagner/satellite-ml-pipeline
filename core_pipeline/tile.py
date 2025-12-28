@@ -19,12 +19,13 @@ from rasterio.windows import Window
 
 from core_pipeline.constants import RAW_DATA_DIRECTORY, DATA_DIRECTORY
 from core_pipeline.exceptions import TileSizeTypeError, TileSizeValueError
+from core_pipeline.validate import validate_raster
 
 
 def generate_tiles(input_tif: Path, output_path: Path, tile_size: int = 256) -> None:
     """Split a raster image into fixed-size tiles and write them to disk."""
-    if not input_tif.exists():
-        raise FileNotFoundError(input_tif.name)
+    validate_raster(input_tif)
+
     if not isinstance(tile_size, int):
         raise TileSizeTypeError(tile_size)
     if tile_size <= 0:
@@ -66,7 +67,7 @@ def generate_tiles(input_tif: Path, output_path: Path, tile_size: int = 256) -> 
 
                 tile_id += 1
 
-    logging.info(f"Generated {tile_id} tiles")
+    logging.info("Generated %s tiles", tile_id)
 
 
 if __name__ == "__main__":
