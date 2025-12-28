@@ -37,7 +37,7 @@ def run_batch_inference(
 
     results = list()
 
-    tile_paths = sorted(tiles_directory.glob("tile_*.tif"))
+    tile_paths = sorted(tiles_directory.glob("*.tif"))
 
     if not tile_paths:
         raise FileNotFoundError(f"No tiles found in {tiles_directory}")
