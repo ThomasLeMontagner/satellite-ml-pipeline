@@ -83,10 +83,14 @@ def validate_raster(path: Path) -> None:
     """
     validate_raster_exists(path)
 
-    with rasterio.open(path) as src:
-        validate_crs(src.crs)
-        validate_dimensions(src.width, src.height)
-        validate_dtype(src.dtypes[0])
+    with rasterio.open(path) as source:
+        validate_crs(source.crs)
+        validate_dimensions(source.width, source.height)
+
+        if source.count < 1:
+            raise ValueError(f"Raster has no bands: {path}")
+
+        validate_dtype(source.dtypes[0])
 
     logging.info("Validation passed for raster: %s", path)
 
