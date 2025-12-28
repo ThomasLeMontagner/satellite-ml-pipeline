@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
+from typing import Any
 
 import rasterio
 from rasterio.crs import CRS
@@ -48,7 +49,7 @@ def validate_dimensions(width: int, height: int) -> None:
         raise InvalidRasterDimensionsError(width=width, height=height)
 
 
-def validate_dtype(dtype: str) -> None:
+def validate_dtype(dtype: Any) -> None:
     """Ensure that raster data type is suitable for numerical processing.
 
     :raises: ValueError if the raster data type is invalid.
