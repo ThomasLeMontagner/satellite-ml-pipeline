@@ -90,7 +90,7 @@ def _get_result(
     model_path: Path,
     prediction: Predictions,
     tile_path: Path,
-) -> dict[str, str | float]:
+) -> dict[str, str | float | int]:
     """Return prediction and confidence proxy for a tile."""
     return {
         "tile_id": tile_path.stem,

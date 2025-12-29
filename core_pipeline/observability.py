@@ -10,6 +10,7 @@ Key design decisions:
 
 import logging
 import time
+from types import TracebackType
 
 
 def setup_logger(name: str) -> logging.Logger:
@@ -65,7 +66,12 @@ class Timer:
         self.start = time.perf_counter()
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback) -> None:
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        traceback: TracebackType | None,
+    ) -> None:
         """Exit the context manager."""
         if self.start is not None:
             self.duration = time.perf_counter() - self.start
