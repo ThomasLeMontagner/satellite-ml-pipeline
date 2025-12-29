@@ -73,7 +73,8 @@ class Timer:
         exc_type: type[BaseException] | None,
         exc_value: BaseException | None,
         traceback: TracebackType | None,
-    ) -> None:
+    ) -> bool:
         """Exit the context manager."""
         if self.start is not None:
             self.duration = time.perf_counter() - self.start
+        return False
