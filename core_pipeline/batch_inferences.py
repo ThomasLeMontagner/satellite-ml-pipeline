@@ -31,6 +31,9 @@ def run_batch_inference(
     output_path: Path,
 ) -> None:
     """Run batch inference on all tiles in a directory and save predictions."""
+    # Reset metrics at the start to prevent unbounded memory growth
+    metrics.reset()
+
     model = load_model(str(model_path))
     results = []
     tile_paths = sorted(tiles_directory.glob("*.tif"))
