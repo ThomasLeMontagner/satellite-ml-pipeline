@@ -11,34 +11,22 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import rasterio
-import numpy as np
-
-from model.features import extract_features
-from model.train import Model, save_model
-
-
-def load_tile(path: Path) -> np.ndarray:
-    """Load a raster tile from disk as a NumPy array."""
-    with rasterio.open(path) as source:
-        return source.read()
+from core_pipeline.tile import load_tile
+from model.features import extract_features, Features
+from model.registry import get_latest_model
+from model.train import save_model, train_model
 
 
-def aggregate_features(tile_paths: list[Path]) -> dict[str, float]:
+def aggregate_features(tile_paths: list[Path]) -> list[Features]:
     """Aggregate features across multiple tiles."""
-    means = list()
+    aggregated_features = list()
 
     for tile_path in tile_paths:
         tile = load_tile(tile_path)
         features = extract_features(tile)
-        means.append(features["mean_intensity"])
+        aggregated_features.append(features)
 
-    return {"global_mean_intensity": float(np.mean(means))}
-
-
-def train_model(features: dict[str, float]) -> Model:
-    """Create a simple threshold-based model from aggregated features."""
-    return {"threshold": features["global_mean_intensity"]}
+    return aggregated_features
 
 
 def update_latest_model(model_path: Path, latest_path: Path) -> None:
@@ -47,10 +35,9 @@ def update_latest_model(model_path: Path, latest_path: Path) -> None:
 
 
 if __name__ == "__main__":
-    from core_pipeline.constants import TILES_DIRECTORY
+    from constants import TILES_DIRECTORY, MODELS_DIRECTORY
 
-    model_directory = Path("models")
-    latest_model_path = model_directory / "latest_model.json"
+    latest_model_path = get_latest_model(MODELS_DIRECTORY)
 
     tile_paths = sorted(TILES_DIRECTORY.glob("*.tif"))
     if not tile_paths:
@@ -58,7 +45,7 @@ if __name__ == "__main__":
 
     features = aggregate_features(tile_paths)
     model = train_model(features)
-    model_path = save_model(model, model_directory)
+    model_path = save_model(model, MODELS_DIRECTORY)
     update_latest_model(model_path, latest_model_path)
 
     print(f"Model trained and saved at {model_path}")

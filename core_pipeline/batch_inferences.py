@@ -13,18 +13,10 @@ import logging
 from pathlib import Path
 import json
 
-import numpy as np
-import rasterio
-
-from core_pipeline.constants import TILES_DIRECTORY
+from constants import TILES_DIRECTORY
+from core_pipeline.tile import load_tile
 from core_pipeline.validate import validate_raster
 from model.inferences import load_model, predict
-
-
-def load_tile(path: Path) -> np.ndarray:
-    """Load a raster tile from disk as a NumPy array."""
-    with rasterio.open(path) as src:
-        return src.read()
 
 
 def run_batch_inference(

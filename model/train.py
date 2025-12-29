@@ -9,7 +9,9 @@ Key design decisions:
 from pathlib import Path
 import json
 import uuid
-from typing import TYPE_CHECKING, TypedDict
+from typing import TypedDict
+
+import numpy as np
 
 from model.features import Features
 
@@ -20,9 +22,10 @@ class Model(TypedDict):
     threshold: float
 
 
-def train_model(features: Features) -> Model:
+def train_model(aggregated_features: list[Features]) -> Model:
     """Train a simple threshold-based model from aggregated features."""
-    threshold = features["mean_intensity"]
+    means = [features["mean_intensity"] for features in aggregated_features]
+    threshold = float(np.mean(means))
 
     return {
         "threshold": threshold,

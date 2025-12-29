@@ -14,7 +14,7 @@ import logging
 from pathlib import Path
 import urllib.request
 
-from core_pipeline.constants import RAW_DATA_DIRECTORY
+from constants import RAW_DATA_DIRECTORY
 
 
 SAMPLE_URL: str = "https://download.osgeo.org/geotiff/samples/usgs/o41078a5.tif"
