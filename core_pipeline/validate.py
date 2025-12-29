@@ -19,7 +19,7 @@ from typing import Any
 import rasterio
 from rasterio.crs import CRS
 
-from core_pipeline.exceptions import UndefinedCRSError, InvalidRasterDimensionsError
+from core_pipeline.exceptions import InvalidRasterDimensionsError, UndefinedCRSError
 
 
 def validate_raster_exists(path: Path) -> None:

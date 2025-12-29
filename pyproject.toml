@@ -1,0 +1,54 @@
+[project]
+name = "satellite-ml-pipeline"
+version = "0.1.0"
+description = "Scalable Satellite Tile Inference Pipeline"
+readme = "README.md"
+requires-python = ">=3.10"
+
+[tool.ruff]
+# Set the maximum line length to 88 (Black's default)
+line-length = 88
+
+# Assume Python 3.10+
+target-version = "py310"
+
+# Exclude common directories
+exclude = [
+    ".git",
+    ".venv",
+    "venv",
+    "__pycache__",
+    "*.egg-info",
+    "build",
+    "dist",
+]
+
+[tool.ruff.lint]
+# Enable the following rule sets:
+select = [
+    "E",    # pycodestyle errors
+    "F",    # pyflakes
+    "I",    # isort (import sorting)
+    "N",    # pep8-naming
+    "W",    # pycodestyle warnings
+    "UP",   # pyupgrade (modernize Python code)
+    "B",    # flake8-bugbear (find likely bugs)
+    "C4",   # flake8-comprehensions (better list/dict/set comprehensions)
+    "PIE",  # flake8-pie (miscellaneous lints)
+    "SIM"   # flake8-simplify (simplification suggestions)
+]
+
+ignore = []
+
+[tool.ruff.format]
+# Use double quotes for strings
+quote-style = "double"
+
+# Indent with spaces
+indent-style = "space"
+
+# Like Black, respect magic trailing commas
+skip-magic-trailing-comma = false
+
+# Like Black, automatically detect the appropriate line ending
+line-ending = "auto"

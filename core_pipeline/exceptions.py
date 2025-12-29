@@ -3,11 +3,11 @@
 from typing import Any
 
 
-class PipelineException(Exception):
+class PipelineError(Exception):
     """Base exception class for pipeline."""
 
 
-class TileSizeTypeError(PipelineException):
+class TileSizeTypeError(PipelineError):
     """Raised when a tile size type is invalid."""
 
     def __init__(self, tile_size: Any) -> None:
@@ -18,16 +18,18 @@ class TileSizeTypeError(PipelineException):
         super().__init__(message)
 
 
-class TileSizeValueError(PipelineException):
+class TileSizeValueError(PipelineError):
     """Raised when a tile size value is invalid."""
 
     def __init__(self, tile_size: int) -> None:
         """Initializes the exception with a specific message."""
-        message = f"tile_size must be a positive integer number of pixels. Received {tile_size}"
+        message = (
+            f"tile_size must be a positive integer number of pixels. Received {tile_size}"
+        )
         super().__init__(message)
 
 
-class UndefinedCRSError(PipelineException):
+class UndefinedCRSError(PipelineError):
     """Raised when a raster has an undefined coordinate reference system."""
 
     def __init__(self) -> None:
@@ -36,7 +38,7 @@ class UndefinedCRSError(PipelineException):
         super().__init__(message)
 
 
-class InvalidRasterDimensionsError(PipelineException):
+class InvalidRasterDimensionsError(PipelineError):
     """Raised when a raster dimension is invalid."""
 
     def __init__(self, height: int, width: int) -> None:

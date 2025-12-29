@@ -9,9 +9,9 @@ Key design decisions:
   to support traceability and reproducibility.
 """
 
+import json
 import logging
 from pathlib import Path
-import json
 
 import numpy as np
 import rasterio
@@ -35,7 +35,7 @@ def run_batch_inference(
     """Run batch inference on all tiles in a directory and save predictions."""
     model = load_model(str(model_path))
 
-    results = list()
+    results = []
 
     tile_paths = sorted(tiles_directory.glob("*.tif"))
 

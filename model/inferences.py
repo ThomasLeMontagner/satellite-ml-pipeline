@@ -26,7 +26,7 @@ class Predictions(TypedDict):
 
 def load_model(path: str) -> Model:
     """Load a serialized model artifact from disk."""
-    with open(path, "r") as f:
+    with open(path) as f:
         return json.load(f)
 
 
