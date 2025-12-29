@@ -11,8 +11,7 @@ import json
 import uuid
 from typing import TYPE_CHECKING, TypedDict
 
-if TYPE_CHECKING:
-    from model.features import Features
+from model.features import Features
 
 
 class Model(TypedDict):
@@ -38,6 +37,6 @@ def save_model(model: Model, output_dir: Path) -> Path:
     model_path = output_dir / f"model_{model_id}.json"
 
     with open(model_path, "w") as f:
-        json.dump(model, f)
+        json.dump(model, f, indent=2)
 
     return model_path
