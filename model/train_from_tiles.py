@@ -16,16 +16,16 @@ from model.features import Features, extract_features
 from model.train import save_model, train_model
 
 
-def aggregate_features(tile_paths: list[Path]) -> list[Features]:
-    """Aggregate features across multiple tiles."""
-    aggregated_features = []
+def collect_tile_features(tile_paths: list[Path]) -> list[Features]:
+    """Collect features across multiple tiles."""
+    collected_features= []
 
     for tile_path in tile_paths:
         tile = load_tile(tile_path)
         features = extract_features(tile)
-        aggregated_features.append(features)
+        collected_features.append(features)
 
-    return aggregated_features
+    return collected_features
 
 
 def update_latest_model(model_path: Path, latest_path: Path) -> None:
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     if not tile_paths:
         raise FileNotFoundError("No tiles found for training")
 
-    features = aggregate_features(tile_paths)
+    features = collect_tile_features(tile_paths)
     model = train_model(features)
     model_path = save_model(model, MODELS_DIRECTORY)
 
