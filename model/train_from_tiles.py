@@ -29,7 +29,7 @@ def collect_tile_features(tile_paths: list[Path]) -> list[Features]:
 
 
 def copy_model_to_latest(model_path: Path, latest_path: Path) -> None:
-    """Update the pointer to the latest model artifact."""
+    """Copy the model artifact to the path representing the latest model."""
     latest_path.write_text(model_path.read_text())
 
 
