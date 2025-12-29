@@ -9,10 +9,11 @@ Key design decisions:
 import json
 import uuid
 from pathlib import Path
-from typing import TYPE_CHECKING, TypedDict
+from typing import TypedDict
 
-if TYPE_CHECKING:
-    from model.features import Features
+import numpy as np
+
+from model.features import Features
 
 
 class Model(TypedDict):
@@ -21,9 +22,16 @@ class Model(TypedDict):
     threshold: float
 
 
-def train_model(features: Features) -> Model:
+def train_model(aggregated_features: list[Features]) -> Model:
     """Train a simple threshold-based model from aggregated features."""
-    threshold = features["mean_intensity"]
+    if not aggregated_features:
+        raise ValueError(
+            "Cannot train model: 'aggregated_features' must contain at least one "
+            "feature set."
+        )
+
+    means = [features["mean_intensity"] for features in aggregated_features]
+    threshold = float(np.mean(means))
 
     return {
         "threshold": threshold,
@@ -38,6 +46,6 @@ def save_model(model: Model, output_dir: Path) -> Path:
     model_path = output_dir / f"model_{model_id}.json"
 
     with open(model_path, "w") as f:
-        json.dump(model, f)
+        json.dump(model, f, indent=2)
 
     return model_path

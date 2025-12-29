@@ -14,10 +14,11 @@ Key design decisions:
 import logging
 from pathlib import Path
 
+import numpy as np
 import rasterio
 from rasterio.windows import Window
 
-from core_pipeline.constants import RAW_DATA_DIRECTORY, TILES_DIRECTORY
+from constants import RAW_DATA_DIRECTORY, TILES_DIRECTORY
 from core_pipeline.exceptions import TileSizeTypeError, TileSizeValueError
 from core_pipeline.validate import validate_raster
 
@@ -68,6 +69,12 @@ def generate_tiles(input_tif: Path, output_path: Path, tile_size: int = 256) -> 
                 tile_id += 1
 
     logging.info("Generated %s tiles", tile_id)
+
+
+def load_tile(path: Path) -> np.ndarray:
+    """Load a raster tile from disk as a NumPy array."""
+    with rasterio.open(path) as source:
+        return source.read()
 
 
 if __name__ == "__main__":
