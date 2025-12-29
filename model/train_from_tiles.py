@@ -18,7 +18,7 @@ from model.train import save_model, train_model
 
 def collect_tile_features(tile_paths: list[Path]) -> list[Features]:
     """Collect features across multiple tiles."""
-    collected_features= []
+    collected_features = []
 
     for tile_path in tile_paths:
         tile = load_tile(tile_path)

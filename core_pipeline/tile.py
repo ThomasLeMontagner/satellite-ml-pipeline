@@ -71,6 +71,12 @@ def generate_tiles(input_tif: Path, output_path: Path, tile_size: int = 256) -> 
     logging.info("Generated %s tiles", tile_id)
 
 
+def load_tile(path: Path) -> np.ndarray:
+    """Load a raster tile from disk as a NumPy array."""
+    with rasterio.open(path) as source:
+        return source.read()
+
+
 if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
     generate_tiles(
@@ -78,9 +84,3 @@ if __name__ == "__main__":
         output_path=TILES_DIRECTORY,
         tile_size=256,
     )
-
-
-def load_tile(path: Path) -> np.ndarray:
-    """Load a raster tile from disk as a NumPy array."""
-    with rasterio.open(path) as source:
-        return source.read()
