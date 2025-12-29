@@ -39,7 +39,7 @@ if __name__ == "__main__":
 
     tile_paths = sorted(TILES_DIRECTORY.glob("*.tif"))
     if not tile_paths:
-        raise FileNotFoundError("No tiles found for training")
+        raise ValueError(f"No .tif tiles found in {TILES_DIRECTORY} for training")
 
     features = collect_tile_features(tile_paths)
     model = train_model(features)
