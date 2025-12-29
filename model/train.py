@@ -6,9 +6,9 @@ Key design decisions:
 - Avoid heavy ML frameworks to keep focus on production workflows.
 """
 
-from pathlib import Path
 import json
 import uuid
+from pathlib import Path
 from typing import TypedDict
 
 import numpy as np

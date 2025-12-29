@@ -12,14 +12,14 @@ from __future__ import annotations
 from pathlib import Path
 
 from core_pipeline.tile import load_tile
-from model.features import extract_features, Features
+from model.features import Features, extract_features
 from model.registry import get_latest_model
 from model.train import save_model, train_model
 
 
 def aggregate_features(tile_paths: list[Path]) -> list[Features]:
     """Aggregate features across multiple tiles."""
-    aggregated_features = list()
+    aggregated_features = []
 
     for tile_path in tile_paths:
         tile = load_tile(tile_path)
@@ -35,7 +35,7 @@ def update_latest_model(model_path: Path, latest_path: Path) -> None:
 
 
 if __name__ == "__main__":
-    from constants import TILES_DIRECTORY, MODELS_DIRECTORY
+    from constants import MODELS_DIRECTORY, TILES_DIRECTORY
 
     latest_model_path = get_latest_model(MODELS_DIRECTORY)
 
