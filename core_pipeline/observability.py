@@ -8,6 +8,8 @@ Key design decisions:
 - Expose a small, explicit API for recording metrics.
 """
 
+from __future__ import annotations
+
 import logging
 import time
 from types import TracebackType
@@ -42,7 +44,7 @@ class MetricsRecorder:
         self.counters[name] = self.counters.get(name, 0) + value
 
     def record_timing(self, name: str, duration: float) -> None:
-        """Record a timing measurement innfer_tile(request: InferenceRequest) -> dict[str, str | floa seconds."""
+        """Record a timing measurement in seconds."""
         self.timings[name] = self.timings.get(name, 0.0) + duration
 
     def snapshot(self) -> dict[str, dict[str, float] | dict[str, int]]:
@@ -61,7 +63,7 @@ class Timer:
         self.start: float | None = None
         self.duration: float | None = None
 
-    def __enter__(self) -> "Timer":
+    def __enter__(self) -> Timer:
         """Enter the context manager."""
         self.start = time.perf_counter()
         return self
