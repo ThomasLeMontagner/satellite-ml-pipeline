@@ -5,8 +5,8 @@ Key design decisions:
 - Load a single immutable model artifact per batch run.
 - Process tiles sequentially to keep memory usage predictable.
 - Keep inference stateless and deterministic.
-- Persist per-tile predictions together with model version metadata
-  to support traceability and reproducibility.
+- Persist per-tile predictions together with model version metadata to support
+  traceability and reproducibility.
 """
 
 import json
@@ -19,7 +19,6 @@ from core_pipeline.validate import validate_raster
 from model.inferences import Predictions, load_model, predict
 
 TILES_INFERRED = "tiles_inferred"
-
 TILES_FAILED = "tiles_failed"
 
 logger = setup_logger(__name__)
