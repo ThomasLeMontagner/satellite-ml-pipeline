@@ -24,6 +24,12 @@ class Model(TypedDict):
 
 def train_model(aggregated_features: list[Features]) -> Model:
     """Train a simple threshold-based model from aggregated features."""
+    if not aggregated_features:
+        raise ValueError(
+            "Cannot train model: 'aggregated_features' must contain at least one "
+            "feature set."
+        )
+
     means = [features["mean_intensity"] for features in aggregated_features]
     threshold = float(np.mean(means))
 
