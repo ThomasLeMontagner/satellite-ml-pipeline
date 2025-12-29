@@ -10,17 +10,17 @@ Key design decisions:
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel
 
-from constants import MODELS_DIRECTORY
+from constants import MODELS_DIRECTORY, TILES_DIRECTORY
 from core_pipeline.tile import load_tile
 from core_pipeline.validate import validate_raster
 from model.inferences import load_model, predict
 from model.train import Model
 
 MODEL_PATH = MODELS_DIRECTORY / "latest_model.json"
-
+ALLOWED_TILE_DIRECTORY = TILES_DIRECTORY
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
@@ -53,11 +53,37 @@ class InferenceResponse(BaseModel):
     mean_intensity: float
     model_path: str
 
+def validate_tile_path(user_path: str) -> Path:
+    """Validate and resolve a user-provided tile path safely.
+
+    Prevents path traversal by ensuring the resolved path stays within ALLOWED_TILE_DIR.
+    """
+    try:
+        resolved_path = (ALLOWED_TILE_DIRECTORY / user_path).resolve()
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid tile path.",
+        )
+
+    if not resolved_path.is_file():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Tile file not found.",
+        )
+
+    if not resolved_path.is_relative_to(ALLOWED_TILE_DIRECTORY):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access to this path is not allowed.",
+        )
+
+    return resolved_path
 
 @app.post("/infer", response_model=InferenceResponse)
 def infer_tile(request: InferenceRequest) -> dict[str, object]:
     """Run inference on a single satellite image tile."""
-    tile_path = Path(request.tile_path)
+    tile_path = validate_tile_path(request.tile_path)
 
     try:
         validate_raster(tile_path)
