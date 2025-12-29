@@ -10,6 +10,7 @@ Key design decisions:
 """
 
 import json
+import uuid
 from pathlib import Path
 
 from constants import MODELS_DIRECTORY, TILES_DIRECTORY
@@ -33,6 +34,8 @@ def run_batch_inference(
     """Run batch inference on all tiles in a directory and save predictions."""
     metrics.reset()  # Reset metrics at the start to prevent unbounded memory growth
 
+    run_id = str(uuid.uuid4())
+
     model = load_model(str(model_path))
     results = []
     tile_paths = sorted(tiles_directory.glob("*.tif"))
@@ -41,7 +44,8 @@ def run_batch_inference(
         raise FileNotFoundError(f"No tiles found in {tiles_directory}")
 
     logger.info(
-        "Starting batch inference | tiles_dir=%s | model_path=%s",
+        "Starting batch inference | run_id=%s | tiles_dir=%s | model_path=%s",
+        run_id,
         tiles_directory,
         model_path,
     )
@@ -60,7 +64,7 @@ def run_batch_inference(
                     "inference_time_seconds", prediction_timer.duration or 0.0
                 )
 
-                results.append(_get_result(model_path, prediction, tile_path))
+                results.append(_get_result(model_path, prediction, tile_path, run_id))
 
             except Exception as exc:
                 logger.error(
@@ -73,11 +77,25 @@ def run_batch_inference(
     metrics.record_timing("batch_duration_seconds", batch_timer.duration or 0.0)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
+    # Structure output with batch-level metadata and results
+    output = {
+        "metadata": {
+            "run_id": run_id,
+            "model_path": str(model_path),
+            "tiles_directory": str(tiles_directory),
+            "tiles_inferred": metrics.counters.get(TILES_INFERRED, 0),
+            "tiles_failed": metrics.counters.get(TILES_FAILED, 0),
+            "batch_duration_seconds": batch_timer.duration or 0.0,
+        },
+        "predictions": results,
+    }
+
     with open(output_path, "w") as f:
-        json.dump(results, f, indent=2)
+        json.dump(output, f, indent=2)
 
     logger.info(
-        "Batch inference completed | tiles=%d | failed=%d | duration=%.3fs",
+        "Batch inference completed | run_id=%s | tiles=%d | failed=%d | duration=%.3fs",
+        run_id,
         metrics.counters.get(TILES_INFERRED, 0),
         metrics.counters.get(TILES_FAILED, 0),
         batch_timer.duration or 0.0,
@@ -90,10 +108,12 @@ def _get_result(
     model_path: Path,
     prediction: Predictions,
     tile_path: Path,
+    run_id: str,
 ) -> dict[str, str | float | int]:
     """Return prediction and confidence proxy for a tile."""
     return {
         "tile_id": tile_path.stem,
+        "run_id": run_id,
         "model_path": str(model_path),
         "prediction": prediction["prediction"],
         "mean_intensity": prediction["mean_intensity"],
