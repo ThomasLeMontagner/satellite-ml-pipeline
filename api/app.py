@@ -15,10 +15,14 @@ from pydantic import BaseModel
 
 from constants import MODELS_DIRECTORY, TILES_DIRECTORY
 from core_pipeline.exceptions import PipelineError
+from core_pipeline.observability import MetricsRecorder, Timer, setup_logger
 from core_pipeline.tile import load_tile
 from core_pipeline.validate import validate_raster
 from model.inferences import load_model, predict
 from model.train import Model
+
+logger = setup_logger("api")
+metrics = MetricsRecorder()
 
 MODEL_PATH = MODELS_DIRECTORY / "latest_model.json"
 ALLOWED_TILE_DIRECTORY = TILES_DIRECTORY
@@ -114,7 +118,18 @@ def infer_tile(request: InferenceRequest) -> dict[str, object]:
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Model is not loaded. Please try again later.",
         )
-    result = predict(tile, current_model)
+
+    with Timer() as timer:
+        result = predict(tile, current_model)
+
+    metrics.increment("api_requests_success")
+    metrics.record_timing("api_inference_seconds", timer.duration or 0.0)
+
+    logger.info(
+        "Inference succeeded | tile=%s | duration=%.4fs",
+        tile_path.name,
+        timer.duration or 0.0,
+    )
 
     return {
         "prediction": result["prediction"],

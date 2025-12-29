@@ -10,13 +10,20 @@ Key design decisions:
 """
 
 import json
-import logging
 from pathlib import Path
 
-from constants import TILES_DIRECTORY
+from constants import MODELS_DIRECTORY, TILES_DIRECTORY
+from core_pipeline.observability import MetricsRecorder, Timer, setup_logger
 from core_pipeline.tile import load_tile
 from core_pipeline.validate import validate_raster
 from model.inferences import load_model, predict
+
+TILES_INFERRED = "tiles_inferred"
+
+TILES_FAILED = "tiles_failed"
+
+logger = setup_logger(__name__)
+metrics = MetricsRecorder()
 
 
 def run_batch_inference(
@@ -34,34 +41,64 @@ def run_batch_inference(
     if not tile_paths:
         raise FileNotFoundError(f"No tiles found in {tiles_directory}")
 
-    for tile_path in tile_paths:
-        validate_raster(tile_path)
+    logger.info(
+        "Starting batch inference | tiles_dir=%s | model_path=%s",
+        tiles_directory,
+        model_path,
+    )
 
-        tile = load_tile(tile_path)
-        prediction = predict(tile, model)
+    with Timer() as batch_timer:
+        for tile_path in tile_paths:
+            metrics.increment("tiles_seen")
 
-        results.append(
-            {
-                "tile_id": tile_path.stem,
-                "model_path": str(model_path),
-                "prediction": prediction["prediction"],
-                "mean_intensity": prediction["mean_intensity"],
-            }
-        )
+            try:
+                validate_raster(tile_path)
+                tile = load_tile(tile_path)
 
+                with Timer() as prediction_timer:
+                    prediction = predict(tile, model)
+
+                metrics.increment(TILES_INFERRED)
+                metrics.record_timing(
+                    "inference_time_seconds", prediction_timer.duration or 0.0
+                )
+
+                results.append(
+                    {
+                        "tile_id": tile_path.stem,
+                        "model_path": str(model_path),
+                        "prediction": prediction["prediction"],
+                        "mean_intensity": prediction["mean_intensity"],
+                    }
+                )
+
+            except Exception as exc:
+                logger.error(
+                    "Inference failed for tile %s | error=%s",
+                    tile_path.name,
+                    exc,
+                )
+                metrics.increment(TILES_FAILED)
+
+    metrics.record_timing("batch_duration_seconds", batch_timer.duration or 0.0)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     with open(output_path, "w") as f:
         json.dump(results, f, indent=2)
 
-    logging.info("Batch inference completed for %s tiles", len(results))
-    logging.info("Results written to %s", output_path)
+    logger.info(
+        "Batch inference completed | tiles=%d | failed=%d | duration=%.3fs",
+        metrics.counters.get(TILES_INFERRED, 0),
+        metrics.counters.get(TILES_FAILED, 0),
+        batch_timer.duration or 0.0,
+    )
+
+    logger.info("Metrics snapshot: %s", metrics.snapshot())
 
 
 if __name__ == "__main__":
-    logging.getLogger().setLevel(logging.INFO)
     run_batch_inference(
         tiles_directory=TILES_DIRECTORY,
-        model_path=Path("models/model_example.json"),
+        model_path=MODELS_DIRECTORY / "latest_model.json",
         output_path=Path("outputs/batch_predictions.json"),
     )
