@@ -28,7 +28,7 @@ def collect_tile_features(tile_paths: list[Path]) -> list[Features]:
     return collected_features
 
 
-def update_latest_model(model_path: Path, latest_path: Path) -> None:
+def copy_model_to_latest(model_path: Path, latest_path: Path) -> None:
     """Update the pointer to the latest model artifact."""
     latest_path.write_text(model_path.read_text())
 
@@ -45,7 +45,7 @@ if __name__ == "__main__":
     model_path = save_model(model, MODELS_DIRECTORY)
 
     latest_model_path = MODELS_DIRECTORY / "latest_model.json"
-    update_latest_model(model_path, latest_model_path)
+    copy_model_to_latest(model_path, latest_model_path)
 
     print(f"Model trained and saved at {model_path}")
     print(f"Latest model updated at {latest_model_path}")
