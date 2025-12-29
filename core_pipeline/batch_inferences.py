@@ -48,8 +48,6 @@ def run_batch_inference(
 
     with Timer() as batch_timer:
         for tile_path in tile_paths:
-            metrics.increment("tiles_seen")
-
             try:
                 validate_raster(tile_path)
                 tile = load_tile(tile_path)
