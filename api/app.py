@@ -14,6 +14,7 @@ from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel
 
 from constants import MODELS_DIRECTORY, TILES_DIRECTORY
+from core_pipeline.exceptions import PipelineError
 from core_pipeline.tile import load_tile
 from core_pipeline.validate import validate_raster
 from model.inferences import load_model, predict
@@ -101,8 +102,11 @@ def infer_tile(request: InferenceRequest) -> dict[str, object]:
     try:
         validate_raster(tile_path)
         tile = load_tile(tile_path)
-    except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except (PipelineError, ValueError) as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
+        ) from exc
 
     current_model = model
     if current_model is None:
