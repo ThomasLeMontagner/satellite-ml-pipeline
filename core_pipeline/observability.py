@@ -41,7 +41,7 @@ class MetricsRecorder:
         self.counters[name] = self.counters.get(name, 0) + value
 
     def record_timing(self, name: str, duration: float) -> None:
-        """Record a timing measurement in seconds."""
+        """Record a timing measurement innfer_tile(request: InferenceRequest) -> dict[str, str | floa seconds."""
         self.timings[name] = self.timings.get(name, 0.0) + duration
 
     def snapshot(self) -> dict[str, dict[str, float] | dict[str, int]]:
