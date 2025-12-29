@@ -99,7 +99,7 @@ def _validate_tile_path(user_path: str) -> Path:
 
 
 @app.post("/infer", response_model=InferenceResponse)
-def infer_tile(request: InferenceRequest) -> dict[str, object]:
+def infer_tile(request: InferenceRequest) -> dict[str, str | float]:
     """Run inference on a single satellite image tile."""
     tile_path = _validate_tile_path(request.tile_path)
 

@@ -16,7 +16,7 @@ from constants import MODELS_DIRECTORY, TILES_DIRECTORY
 from core_pipeline.observability import MetricsRecorder, Timer, setup_logger
 from core_pipeline.tile import load_tile
 from core_pipeline.validate import validate_raster
-from model.inferences import load_model, predict
+from model.inferences import Predictions, load_model, predict
 
 TILES_INFERRED = "tiles_inferred"
 
@@ -33,9 +33,7 @@ def run_batch_inference(
 ) -> None:
     """Run batch inference on all tiles in a directory and save predictions."""
     model = load_model(str(model_path))
-
     results = []
-
     tile_paths = sorted(tiles_directory.glob("*.tif"))
 
     if not tile_paths:
@@ -63,14 +61,7 @@ def run_batch_inference(
                     "inference_time_seconds", prediction_timer.duration or 0.0
                 )
 
-                results.append(
-                    {
-                        "tile_id": tile_path.stem,
-                        "model_path": str(model_path),
-                        "prediction": prediction["prediction"],
-                        "mean_intensity": prediction["mean_intensity"],
-                    }
-                )
+                results.append(_get_result(model_path, prediction, tile_path))
 
             except Exception as exc:
                 logger.error(
@@ -94,6 +85,20 @@ def run_batch_inference(
     )
 
     logger.info("Metrics snapshot: %s", metrics.snapshot())
+
+
+def _get_result(
+    model_path: Path,
+    prediction: Predictions,
+    tile_path: Path,
+) -> dict[str, str | float]:
+    """Return prediction and confidence proxy for a tile."""
+    return {
+        "tile_id": tile_path.stem,
+        "model_path": str(model_path),
+        "prediction": prediction["prediction"],
+        "mean_intensity": prediction["mean_intensity"],
+    }
 
 
 if __name__ == "__main__":
