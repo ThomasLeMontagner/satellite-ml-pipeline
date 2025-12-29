@@ -44,7 +44,7 @@ class MetricsRecorder:
         """Record a timing measurement in seconds."""
         self.timings[name] = self.timings.get(name, 0.0) + duration
 
-    def snapshot(self) -> dict[str, dict[str, float]]:
+    def snapshot(self) -> dict[str, dict[str, float] | dict[str, int]]:
         """Return a snapshot of all recorded metrics."""
         return {
             "counters": dict(self.counters),
