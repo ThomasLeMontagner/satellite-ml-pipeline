@@ -17,7 +17,7 @@ from pathlib import Path
 import rasterio
 from rasterio.windows import Window
 
-from core_pipeline.constants import RAW_DATA_DIRECTORY, DATA_DIRECTORY, TILES_DIRECTORY
+from core_pipeline.constants import RAW_DATA_DIRECTORY, TILES_DIRECTORY
 from core_pipeline.exceptions import TileSizeTypeError, TileSizeValueError
 from core_pipeline.validate import validate_raster
 
