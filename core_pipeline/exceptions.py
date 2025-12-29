@@ -23,8 +23,9 @@ class TileSizeValueError(PipelineError):
 
     def __init__(self, tile_size: int) -> None:
         """Initializes the exception with a specific message."""
-        message = ("tile_size must be a positive integer number of pixels. Received "
-                   f"{tile_size}")
+        message = (
+            f"tile_size must be a positive integer number of pixels. Received {tile_size}"
+        )
         super().__init__(message)
 
 
