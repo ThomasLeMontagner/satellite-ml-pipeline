@@ -58,9 +58,10 @@ class MetricsRecorder:
         average, min, max, and percentiles.
         """
         with self._lock:
-            if name not in self.timings:
-                self.timings[name] = []
-            self.timings[name].append(duration)
+            timings = self.timings
+            if name not in timings:
+                timings[name] = []
+            timings[name].append(duration)
 
     def reset(self) -> None:
         """Reset all metrics to prevent unbounded memory growth.
