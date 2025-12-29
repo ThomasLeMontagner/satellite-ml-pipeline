@@ -19,7 +19,7 @@ from core_pipeline.validate import validate_raster
 from model.inferences import load_model, predict
 from model.train import Model
 
-MODEL_PATH = MODELS_DIRECTORY / "latest_modelfoo.json"
+MODEL_PATH = MODELS_DIRECTORY / "latest_model.json"
 ALLOWED_TILE_DIRECTORY = TILES_DIRECTORY
 
 model: Model | None = None
