@@ -22,6 +22,7 @@ from model.train import Model
 MODEL_PATH = MODELS_DIRECTORY / "latest_model.json"
 ALLOWED_TILE_DIRECTORY = TILES_DIRECTORY
 
+
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     """Application lifespan: load and clean up resources."""
@@ -53,6 +54,7 @@ class InferenceResponse(BaseModel):
     mean_intensity: float
     model_path: str
 
+
 def validate_tile_path(user_path: str) -> Path:
     """Validate and resolve a user-provided tile path safely.
 
@@ -60,11 +62,11 @@ def validate_tile_path(user_path: str) -> Path:
     """
     try:
         resolved_path = (ALLOWED_TILE_DIRECTORY / user_path).resolve()
-    except Exception:
+    except Exception as err:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid tile path.",
-        )
+        ) from err
 
     if not resolved_path.is_file():
         raise HTTPException(
@@ -80,6 +82,7 @@ def validate_tile_path(user_path: str) -> Path:
 
     return resolved_path
 
+
 @app.post("/infer", response_model=InferenceResponse)
 def infer_tile(request: InferenceRequest) -> dict[str, object]:
     """Run inference on a single satellite image tile."""
@@ -89,7 +92,7 @@ def infer_tile(request: InferenceRequest) -> dict[str, object]:
         validate_raster(tile_path)
         tile = load_tile(tile_path)
     except (FileNotFoundError, ValueError) as exc:
-        raise HTTPException(status_code=400, detail=str(exc))
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
     result = predict(tile, model)
 
