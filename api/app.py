@@ -12,6 +12,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel
+from starlette.status import HTTP_400_BAD_REQUEST
 
 from constants import MODELS_DIRECTORY, TILES_DIRECTORY
 from core_pipeline.tile import load_tile
@@ -19,7 +20,7 @@ from core_pipeline.validate import validate_raster
 from model.inferences import load_model, predict
 from model.train import Model
 
-MODEL_PATH = MODELS_DIRECTORY / "latest_model.json"
+MODEL_PATH = MODELS_DIRECTORY / "latest_modelfoo.json"
 ALLOWED_TILE_DIRECTORY = TILES_DIRECTORY
 
 model: Model | None = None
@@ -29,7 +30,17 @@ model: Model | None = None
 async def lifespan(_: FastAPI):
     """Application lifespan: load and clean up resources."""
     global model
-    model = load_model(str(MODEL_PATH))
+
+    try:
+        model = load_model(str(MODEL_PATH))
+    except FileNotFoundError as exc:
+        raise RuntimeError(
+            f"Model file not found at '{MODEL_PATH}'. "
+            "Ensure the model is trained and exported before starting the API service."
+        ) from exc
+    except Exception as exc:
+        raise RuntimeError(f"Failed to load model from '{MODEL_PATH}': {exc}") from exc
+
     yield
 
 
@@ -55,29 +66,29 @@ class InferenceResponse(BaseModel):
     model_path: str
 
 
-def validate_tile_path(user_path: str) -> Path:
+def _validate_tile_path(user_path: str) -> Path:
     """Validate and resolve a user-provided tile path safely.
 
-    Prevents path traversal by ensuring the resolved path stays within ALLOWED_TILE_DIR.
+    Prevents path traversal by ensuring the resolved path stays within
+    ALLOWED_TILE_DIRECTORY.
     """
     try:
         resolved_path = (ALLOWED_TILE_DIRECTORY / user_path).resolve()
-    except Exception as err:
+    except (OSError, ValueError) as err:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid tile path.",
         ) from err
 
-    if not resolved_path.is_file():
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Tile file not found.",
-        )
-
     if not resolved_path.is_relative_to(ALLOWED_TILE_DIRECTORY):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Access to this path is not allowed.",
+        )
+    if not resolved_path.is_file():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Tile file not found.",
         )
 
     return resolved_path
@@ -86,15 +97,21 @@ def validate_tile_path(user_path: str) -> Path:
 @app.post("/infer", response_model=InferenceResponse)
 def infer_tile(request: InferenceRequest) -> dict[str, object]:
     """Run inference on a single satellite image tile."""
-    tile_path = validate_tile_path(request.tile_path)
+    tile_path = _validate_tile_path(request.tile_path)
 
     try:
         validate_raster(tile_path)
         tile = load_tile(tile_path)
-    except (FileNotFoundError, ValueError) as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
 
-    result = predict(tile, model)
+    current_model = model
+    if current_model is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Model is not loaded. Please try again later.",
+        )
+    result = predict(tile, current_model)
 
     return {
         "prediction": result["prediction"],
