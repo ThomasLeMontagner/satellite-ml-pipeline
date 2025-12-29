@@ -12,7 +12,6 @@ from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel
-from starlette.status import HTTP_400_BAD_REQUEST
 
 from constants import MODELS_DIRECTORY, TILES_DIRECTORY
 from core_pipeline.tile import load_tile
@@ -103,7 +102,7 @@ def infer_tile(request: InferenceRequest) -> dict[str, object]:
         validate_raster(tile_path)
         tile = load_tile(tile_path)
     except ValueError as exc:
-        raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
     current_model = model
     if current_model is None:
