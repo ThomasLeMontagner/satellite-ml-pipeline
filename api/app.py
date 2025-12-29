@@ -22,6 +22,8 @@ from model.train import Model
 MODEL_PATH = MODELS_DIRECTORY / "latest_model.json"
 ALLOWED_TILE_DIRECTORY = TILES_DIRECTORY
 
+model: Model | None = None
+
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
@@ -37,8 +39,6 @@ app = FastAPI(
     version="0.1.0",
     lifespan=lifespan,
 )
-
-model: Model | None = None
 
 
 class InferenceRequest(BaseModel):
