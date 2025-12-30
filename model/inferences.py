@@ -27,7 +27,23 @@ class Predictions(TypedDict):
 def load_model(path: str) -> Model:
     """Load a serialized model artifact from disk."""
     with open(path) as f:
-        return json.load(f)
+        model_data = json.load(f)
+
+    # Validate that required fields exist
+    if "threshold" not in model_data:
+        raise ValueError(
+            f"Invalid model artifact: missing required 'threshold' field in {path}"
+        )
+
+    # Ensure threshold is a number
+    try:
+        float(model_data["threshold"])
+    except (TypeError, ValueError) as exc:
+        raise ValueError(
+            f"Invalid model artifact: 'threshold' must be a number in {path}"
+        ) from exc
+
+    return model_data
 
 
 def predict(tile: np.ndarray, model: Model) -> Predictions:
