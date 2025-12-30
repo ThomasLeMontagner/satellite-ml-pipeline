@@ -19,6 +19,7 @@ from typing import Any
 import rasterio
 from rasterio.crs import CRS
 
+from constants import RAW_DATA_DIRECTORY
 from core_pipeline.exceptions import InvalidRasterDimensionsError, UndefinedCRSError
 
 
@@ -98,4 +99,4 @@ def validate_raster(path: Path) -> None:
 
 if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
-    validate_raster(Path("data/raw/sample.tif"))
+    validate_raster(RAW_DATA_DIRECTORY / "sample.tif")
