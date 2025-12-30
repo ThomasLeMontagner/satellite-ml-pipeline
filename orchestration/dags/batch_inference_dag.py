@@ -39,9 +39,7 @@ with DAG(
     catchup=False,
     tags=["ml", "batch", "satellite"],
 ) as dag:
-    batch_inference = PythonOperator(
+    PythonOperator(
         task_id="run_batch_inference",
         python_callable=run_batch_inference_task,
     )
-
-    batch_inference
