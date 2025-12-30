@@ -9,19 +9,11 @@ Key design decisions:
 import json
 import uuid
 from pathlib import Path
-from typing import TypedDict
 
 import numpy as np
 
 from model.features import Features
-
-
-class Model(TypedDict):
-    """A trained model."""
-
-    threshold: float
-    training_mean: float
-    training_std: float
+from utils.types_ import Model
 
 
 def train_model(aggregated_features: list[Features]) -> Model:

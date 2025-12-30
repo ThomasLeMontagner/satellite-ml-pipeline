@@ -1,4 +1,4 @@
-"""Contains types used by the pipeline."""
+"""Contains shared type definitions used across multiple packages."""
 
 from typing import TypedDict
 
@@ -31,3 +31,11 @@ class MonitoringMetrics(TypedDict):
     prediction_distribution: PredictionDistributionMetrics
     mean_intensity: MeanIntensityMetrics
     drift: DriftMetrics
+
+
+class Model(TypedDict):
+    """A trained model."""
+
+    threshold: float
+    training_mean: float | None
+    training_std: float | None

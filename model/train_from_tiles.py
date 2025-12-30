@@ -12,9 +12,9 @@ from __future__ import annotations
 import shutil
 from pathlib import Path
 
-from core_pipeline.tile import load_tile
 from model.features import Features, extract_features
 from model.train import save_model, train_model
+from utils.data import load_tile
 
 
 def collect_tile_features(tile_paths: list[Path]) -> list[Features]:
