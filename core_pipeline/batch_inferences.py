@@ -83,7 +83,7 @@ def run_batch_inference(
     metrics.record_timing("batch_duration_seconds", batch_timer.duration or 0.0)
 
     monitoring = build_monitoring_metrics(model, metrics)
-    check_model_health(model, monitoring)
+    health_report = check_model_health(model, monitoring)
 
     # Structure output with batch-level metadata and results
     output = {
@@ -95,6 +95,7 @@ def run_batch_inference(
             "tiles_failed": metrics.counters.get(TILES_FAILED, 0),
             "batch_duration_seconds": batch_timer.duration or 0.0,
             "monitoring": monitoring,
+            "health_report": health_report,
         },
         "predictions": results,
     }
