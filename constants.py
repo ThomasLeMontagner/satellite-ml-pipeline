@@ -1,4 +1,4 @@
-"""Contains the constants for the pipeline."""
+"""Contains the constants for the project."""
 
 from pathlib import Path
 

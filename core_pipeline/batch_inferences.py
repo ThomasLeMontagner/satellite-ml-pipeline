@@ -14,13 +14,16 @@ import uuid
 from pathlib import Path
 
 from constants import MODELS_DIRECTORY, TILES_DIRECTORY
-from core_pipeline.observability import MetricsRecorder, Timer, setup_logger
+from core_pipeline.constants import TILES_FAILED, TILES_INFERRED
+from core_pipeline.observability import (
+    MetricsRecorder,
+    Timer,
+    build_monitoring_metrics,
+    setup_logger,
+)
 from core_pipeline.tile import load_tile
 from core_pipeline.validate import validate_raster
 from model.inferences import Predictions, load_model, predict
-
-TILES_INFERRED = "tiles_inferred"
-TILES_FAILED = "tiles_failed"
 
 logger = setup_logger(__name__)
 metrics = MetricsRecorder()
@@ -60,9 +63,11 @@ def run_batch_inference(
                     prediction = predict(tile, model)
 
                 metrics.increment(TILES_INFERRED)
+                metrics.increment(f"prediction_{prediction['prediction']}")
                 metrics.record_timing(
                     "inference_time_seconds", prediction_timer.duration or 0.0
                 )
+                metrics.record_value("mean_intensity", prediction["mean_intensity"])
 
                 results.append(_get_result(model_path, prediction, tile_path, run_id))
 
@@ -75,6 +80,8 @@ def run_batch_inference(
                 metrics.increment(TILES_FAILED)
 
     metrics.record_timing("batch_duration_seconds", batch_timer.duration or 0.0)
+
+    monitoring = build_monitoring_metrics(model, metrics)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     # Structure output with batch-level metadata and results
@@ -86,6 +93,7 @@ def run_batch_inference(
             "tiles_inferred": metrics.counters.get(TILES_INFERRED, 0),
             "tiles_failed": metrics.counters.get(TILES_FAILED, 0),
             "batch_duration_seconds": batch_timer.duration or 0.0,
+            "monitoring": monitoring,
         },
         "predictions": results,
     }
@@ -101,6 +109,7 @@ def run_batch_inference(
         batch_timer.duration or 0.0,
     )
 
+    logger.info("Monitoring metrics: %s", monitoring)
     logger.info("Metrics snapshot: %s", metrics.snapshot())
 
 

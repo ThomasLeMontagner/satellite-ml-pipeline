@@ -15,7 +15,6 @@ from airflow.providers.standard.operators.python import PythonOperator
 
 from core_pipeline.batch_inferences import run_batch_inference
 
-
 DEFAULT_ARGS = {
     "owner": "ml-platform",
     "retries": 1,
@@ -40,7 +39,6 @@ with DAG(
     catchup=False,
     tags=["ml", "batch", "satellite"],
 ) as dag:
-
     batch_inference = PythonOperator(
         task_id="run_batch_inference",
         python_callable=run_batch_inference_task,

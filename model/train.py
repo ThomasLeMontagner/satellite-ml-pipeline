@@ -20,6 +20,8 @@ class Model(TypedDict):
     """A trained model."""
 
     threshold: float
+    training_mean: float
+    training_std: float
 
 
 def train_model(aggregated_features: list[Features]) -> Model:
@@ -32,9 +34,12 @@ def train_model(aggregated_features: list[Features]) -> Model:
 
     means = [features["mean_intensity"] for features in aggregated_features]
     threshold = float(np.mean(means))
+    training_std = float(np.std(means))
 
     return {
         "threshold": threshold,
+        "training_mean": threshold,
+        "training_std": training_std,
     }
 
 
