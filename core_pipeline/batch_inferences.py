@@ -14,13 +14,13 @@ import uuid
 from pathlib import Path
 
 from constants import MODELS_DIRECTORY, TILES_DIRECTORY
-from core_pipeline.constants import TILES_FAILED, TILES_INFERRED
 from core_pipeline.observability import (
     MetricsRecorder,
     Timer,
     build_monitoring_metrics,
     setup_logger,
 )
+from core_pipeline.pipeline_constants import TILES_FAILED, TILES_INFERRED
 from core_pipeline.tile import load_tile
 from core_pipeline.validate import validate_raster
 from model.inferences import Predictions, load_model, predict

@@ -16,7 +16,7 @@ import time
 from statistics import fmean, pstdev
 from types import TracebackType
 
-from core_pipeline.constants import TILES_INFERRED
+from core_pipeline.pipeline_constants import TILES_INFERRED
 from core_pipeline.types_ import MonitoringMetrics
 from model.train import Model
 
