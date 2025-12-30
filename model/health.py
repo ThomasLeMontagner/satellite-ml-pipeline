@@ -15,6 +15,8 @@ from core_pipeline.observability import setup_logger
 from core_pipeline.types_ import MonitoringMetrics
 from model.train import Model
 
+CONSIDER_RETRAINING_MODEL = "Consider retraining the model with recent data."
+
 logger = setup_logger(__name__)
 
 
@@ -56,7 +58,7 @@ def check_model_health(
             mean_delta,
             drift_threshold,
         )
-        recommendations.append("Consider retraining the model with recent data.")
+        recommendations.append(CONSIDER_RETRAINING_MODEL)
 
     if std_delta is not None and abs(std_delta) > drift_threshold:
         drift_detected = True
@@ -68,8 +70,8 @@ def check_model_health(
             std_delta,
             drift_threshold,
         )
-        if "Consider retraining the model with recent data." not in recommendations:
-            recommendations.append("Consider retraining the model with recent data.")
+        if CONSIDER_RETRAINING_MODEL not in recommendations:
+            recommendations.append(CONSIDER_RETRAINING_MODEL)
 
     return {
         "drift_detected": drift_detected,
