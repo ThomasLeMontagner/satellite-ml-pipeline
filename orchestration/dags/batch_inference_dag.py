@@ -38,7 +38,7 @@ with DAG(
     start_date=datetime(2025, 12, 30),
     schedule="@daily",
     catchup=False,
-    tags={"ml", "batch", "satellite"},
+    tags=["ml", "batch", "satellite"],
 ) as dag:
 
     batch_inference = PythonOperator(
