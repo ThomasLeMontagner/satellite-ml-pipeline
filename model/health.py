@@ -33,8 +33,8 @@ def check_model_health(
     drift_threshold: float = 0.5,
 ) -> HealthReport:
     """Compare live monitoring stats with training stats and log warnings."""
-    if drift_threshold < 0:
-        raise ValueError("drift_threshold must be non-negative")
+    if drift_threshold <= 0:
+        raise ValueError("drift_threshold must be positive")
 
     training_mean = model["training_mean"]
     training_std = model["training_std"]
