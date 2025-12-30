@@ -284,6 +284,26 @@ cd satellite-ml-pipeline
 pip install -r requirements.txt
 ```
 
+**Important**: When running Python scripts, you need to set the `PYTHONPATH` to the project root:
+
+```bash
+export PYTHONPATH=/path/to/satellite-ml-pipeline
+```
+
+Or prefix each command with:
+
+```bash
+PYTHONPATH=/path/to/satellite-ml-pipeline python <script.py>
+```
+
+Alternatively, you can install the package in editable mode:
+
+```bash
+pip install -e .
+```
+
+Note: This requires adding a `setup.py` or configuring `pyproject.toml` with build-system information.
+
 ---
 
 ## Project Structure
@@ -318,39 +338,41 @@ satellite-ml-pipeline/
 
 ## Running the Project
 
+**Note**: All commands assume `PYTHONPATH` is set to the project root, or the package is installed in editable mode.
+
 ### Step 1: Download Sample Data
 
 ```bash
 # Download a sample GeoTIFF file
-python core_pipeline/ingest.py
+PYTHONPATH=. python core_pipeline/ingest.py
 ```
 
 ### Step 2: Generate Tiles
 
 ```bash
 # Split the raw image into 256x256 tiles
-python core_pipeline/tile.py
+PYTHONPATH=. python core_pipeline/tile.py
 ```
 
 ### Step 3: Train Model
 
 ```bash
 # Train a simple threshold-based model from tiles
-python model/train_from_tiles.py
+PYTHONPATH=. python model/train_from_tiles.py
 ```
 
 ### Step 4: Run Batch Inference
 
 ```bash
 # Process all tiles in the tiles directory
-python core_pipeline/batch_inferences.py
+PYTHONPATH=. python core_pipeline/batch_inferences.py
 ```
 
 ### Step 5: Start API Server
 
 ```bash
 # Start the FastAPI inference service
-uvicorn api.app:app --host 0.0.0.0 --port 8000
+PYTHONPATH=. uvicorn api.app:app --host 0.0.0.0 --port 8000
 ```
 
 ### Linting and Formatting
