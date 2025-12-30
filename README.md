@@ -159,7 +159,10 @@ This allows results to be regenerated given the same inputs and configuration.
 
 ```bash
 # Batch inference
-python core_pipeline/run_batch_inference.py --config configs/pipeline.yaml
+python run_batch_inference.py
+
+# Or as a module
+python -m core_pipeline.batch_inferences
 
 # Start API
 uvicorn api.app:app --host 0.0.0.0 --port 8000
