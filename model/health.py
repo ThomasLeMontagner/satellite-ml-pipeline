@@ -46,9 +46,7 @@ def check_model_health(
     mean_delta = monitoring["drift"]["mean_intensity_delta"]
     std_delta = monitoring["drift"]["std_intensity_delta"]
 
-    if training_mean is None:
-        logger.warning("Training mean missing; cannot evaluate mean intensity drift.")
-    elif mean_delta is not None and abs(mean_delta) > drift_threshold:
+    if mean_delta is not None and abs(mean_delta) > drift_threshold:
         drift_detected = True
         logger.warning(
             "Potential data drift detected | metric=mean_intensity | "
@@ -60,9 +58,7 @@ def check_model_health(
         )
         recommendations.append("Consider retraining the model with recent data.")
 
-    if training_std is None:
-        logger.warning("Training std missing; cannot evaluate std intensity drift.")
-    elif std_delta is not None and abs(std_delta) > drift_threshold:
+    if std_delta is not None and abs(std_delta) > drift_threshold:
         drift_detected = True
         logger.warning(
             "Potential data drift detected | metric=std_intensity | "
