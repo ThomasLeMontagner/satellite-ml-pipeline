@@ -36,50 +36,44 @@ def check_model_health(
     if drift_threshold < 0:
         raise ValueError("drift_threshold must be non-negative")
 
-    training_mean = model.get("training_mean")
-    training_std = model.get("training_std")
+    training_mean = model["training_mean"]
+    training_std = model["training_std"]
     live_mean = monitoring["mean_intensity"]["mean"]
     live_std = monitoring["mean_intensity"]["std"]
 
     recommendations: list[str] = []
     drift_detected = False
-    mean_delta: float | None = None
-    std_delta: float | None = None
+    mean_delta = monitoring["drift"]["mean_intensity_delta"]
+    std_delta = monitoring["drift"]["std_intensity_delta"]
 
     if training_mean is None:
         logger.warning("Training mean missing; cannot evaluate mean intensity drift.")
-    else:
-        mean_delta = live_mean - float(training_mean)
-        if abs(mean_delta) > drift_threshold:
-            drift_detected = True
-            logger.warning(
-                "Potential data drift detected | metric=mean_intensity | "
-                "live=%.4f | training=%.4f | delta=%.4f | threshold=%.4f",
-                live_mean,
-                float(training_mean),
-                mean_delta,
-                drift_threshold,
-            )
-            recommendations.append("Consider retraining the model with recent data.")
+    elif mean_delta is not None and abs(mean_delta) > drift_threshold:
+        drift_detected = True
+        logger.warning(
+            "Potential data drift detected | metric=mean_intensity | "
+            "live=%.4f | training=%.4f | delta=%.4f | threshold=%.4f",
+            live_mean,
+            float(training_mean),
+            mean_delta,
+            drift_threshold,
+        )
+        recommendations.append("Consider retraining the model with recent data.")
 
     if training_std is None:
         logger.warning("Training std missing; cannot evaluate std intensity drift.")
-    else:
-        std_delta = live_std - float(training_std)
-        if abs(std_delta) > drift_threshold:
-            drift_detected = True
-            logger.warning(
-                "Potential data drift detected | metric=std_intensity | "
-                "live=%.4f | training=%.4f | delta=%.4f | threshold=%.4f",
-                live_std,
-                float(training_std),
-                std_delta,
-                drift_threshold,
-            )
-            if "Consider retraining the model with recent data." not in recommendations:
-                recommendations.append(
-                    "Consider retraining the model with recent data."
-                )
+    elif std_delta is not None and abs(std_delta) > drift_threshold:
+        drift_detected = True
+        logger.warning(
+            "Potential data drift detected | metric=std_intensity | "
+            "live=%.4f | training=%.4f | delta=%.4f | threshold=%.4f",
+            live_std,
+            float(training_std),
+            std_delta,
+            drift_threshold,
+        )
+        if "Consider retraining the model with recent data." not in recommendations:
+            recommendations.append("Consider retraining the model with recent data.")
 
     for recommendation in recommendations:
         logger.info("Recommendation: %s", recommendation)
