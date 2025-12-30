@@ -2,7 +2,8 @@
 
 from pathlib import Path
 
-DATA_DIRECTORY = Path(__file__).resolve().parent / "data"
+PROJECT_ROOT: Path = Path(__file__).resolve().parents[1]
+DATA_DIRECTORY: Path = PROJECT_ROOT / "data"
 RAW_DATA_DIRECTORY: Path = DATA_DIRECTORY / "raw"
 TILES_DIRECTORY: Path = DATA_DIRECTORY / "tiles"
 MODELS_DIRECTORY: Path = Path(__file__).resolve().parent / "model" / "models"
