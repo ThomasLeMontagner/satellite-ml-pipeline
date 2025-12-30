@@ -33,7 +33,7 @@ def check_model_health(
     drift_threshold: float = 0.5,
 ) -> HealthReport:
     """Compare live monitoring stats with training stats and log warnings."""
-    training_mean = model.get("training_mean", model.get("threshold"))
+    training_mean = model.get("training_mean")
     training_std = model.get("training_std")
     live_mean = monitoring["mean_intensity"]["mean"]
     live_std = monitoring["mean_intensity"]["std"]
