@@ -10,32 +10,13 @@ Key design decisions:
 
 from __future__ import annotations
 
-import logging
 import threading
 import time
 from statistics import fmean, pstdev
 from types import TracebackType
 
-from core_pipeline.pipeline_constants import TILES_INFERRED
-from core_pipeline.types_ import MonitoringMetrics
-from model.train import Model
-
-
-def setup_logger(name: str) -> logging.Logger:
-    """Configure and return a module-level logger."""
-    logger = logging.getLogger(name)
-    logger.setLevel(logging.INFO)
-
-    if not logger.handlers:
-        handler = logging.StreamHandler()
-        formatter = logging.Formatter(
-            "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
-        )
-        handler.setFormatter(formatter)
-        logger.addHandler(handler)
-
-    logger.propagate = False  # Prevent duplicate log messages due to propagation
-    return logger
+from shared.constants import TILES_INFERRED
+from shared.types import Model, MonitoringMetrics
 
 
 class MetricsRecorder:

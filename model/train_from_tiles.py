@@ -12,9 +12,9 @@ from __future__ import annotations
 import shutil
 from pathlib import Path
 
-from core_pipeline.tile import load_tile
 from model.features import Features, extract_features
 from model.train import save_model, train_model
+from shared.data_utils import load_tile
 
 
 def collect_tile_features(tile_paths: list[Path]) -> list[Features]:
@@ -35,7 +35,7 @@ def copy_model_to_latest(model_path: Path, latest_path: Path) -> None:
 
 
 if __name__ == "__main__":
-    from constants import MODELS_DIRECTORY, TILES_DIRECTORY
+    from shared.config import MODELS_DIRECTORY, TILES_DIRECTORY
 
     tile_paths = sorted(TILES_DIRECTORY.glob("*.tif"))
     if not tile_paths:

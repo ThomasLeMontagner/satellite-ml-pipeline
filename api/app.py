@@ -13,13 +13,14 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel
 
-from constants import MODELS_DIRECTORY, TILES_DIRECTORY
 from core_pipeline.exceptions import PipelineError
-from core_pipeline.observability import MetricsRecorder, Timer, setup_logger
-from core_pipeline.tile import load_tile
+from core_pipeline.observability import MetricsRecorder, Timer
 from core_pipeline.validate import validate_raster
 from model.inferences import load_model, predict
-from model.train import Model
+from shared.config import MODELS_DIRECTORY, TILES_DIRECTORY
+from shared.data_utils import load_tile
+from shared.observability import setup_logger
+from shared.types import Model
 
 logger = setup_logger("api")
 metrics = MetricsRecorder()

@@ -11,9 +11,8 @@ from __future__ import annotations
 
 from typing import TypedDict
 
-from core_pipeline.observability import setup_logger
-from core_pipeline.types_ import MonitoringMetrics
-from model.train import Model
+from shared.observability import setup_logger
+from shared.types import Model, MonitoringMetrics
 
 CONSIDER_RETRAINING_MODEL = "Consider retraining the model with recent data."
 
