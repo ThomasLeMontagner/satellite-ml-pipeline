@@ -23,6 +23,7 @@ from core_pipeline.observability import (
 from core_pipeline.pipeline_constants import TILES_FAILED, TILES_INFERRED
 from core_pipeline.tile import load_tile
 from core_pipeline.validate import validate_raster
+from model.health import check_model_health
 from model.inferences import Predictions, load_model, predict
 
 logger = setup_logger(__name__)
@@ -82,7 +83,7 @@ def run_batch_inference(
     metrics.record_timing("batch_duration_seconds", batch_timer.duration or 0.0)
 
     monitoring = build_monitoring_metrics(model, metrics)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
+    check_model_health(model, monitoring)
 
     # Structure output with batch-level metadata and results
     output = {
@@ -98,6 +99,7 @@ def run_batch_inference(
         "predictions": results,
     }
 
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w") as f:
         json.dump(output, f, indent=2)
 
