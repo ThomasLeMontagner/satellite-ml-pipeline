@@ -16,5 +16,5 @@ def setup_logger(name: str) -> logging.Logger:
         handler.setFormatter(formatter)
         logger.addHandler(handler)
 
-    logger.propagate = False  # Prevent duplicate log messages due to propagation
+    logger.propagate = False  # Prevent duplicate log messages due to propagation.
     return logger

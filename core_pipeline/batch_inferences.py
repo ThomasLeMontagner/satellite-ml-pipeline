@@ -35,7 +35,7 @@ def run_batch_inference(
     output_path: Path,
 ) -> None:
     """Run batch inference on all tiles in a directory and save predictions."""
-    metrics.reset()  # Reset metrics at the start to prevent unbounded memory growth
+    metrics.reset()  # Reset metrics at the start to prevent unbounded memory growth.
 
     run_id = str(uuid.uuid4())
 
@@ -84,7 +84,7 @@ def run_batch_inference(
     monitoring = build_monitoring_metrics(model, metrics)
     health_report = check_model_health(model, monitoring)
 
-    # Structure output with batch-level metadata and results
+    # Structure output with batch-level metadata and results.
     output = {
         "metadata": {
             "run_id": run_id,
