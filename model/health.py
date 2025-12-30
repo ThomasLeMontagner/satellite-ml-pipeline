@@ -71,9 +71,6 @@ def check_model_health(
         if "Consider retraining the model with recent data." not in recommendations:
             recommendations.append("Consider retraining the model with recent data.")
 
-    for recommendation in recommendations:
-        logger.info("Recommendation: %s", recommendation)
-
     return {
         "drift_detected": drift_detected,
         "mean_intensity_delta": mean_delta,

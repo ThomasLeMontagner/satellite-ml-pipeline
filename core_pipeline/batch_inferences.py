@@ -114,6 +114,8 @@ def run_batch_inference(
 
     logger.info("Monitoring metrics: %s", monitoring)
     logger.info("Metrics snapshot: %s", metrics.snapshot())
+    for recommendation in health_report["recommendations"]:
+        logger.info("Recommendation: %s", recommendation)
 
 
 def _get_result(
