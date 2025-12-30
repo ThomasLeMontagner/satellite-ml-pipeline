@@ -14,7 +14,7 @@ from typing import TypedDict
 import numpy as np
 
 from model.features import extract_features
-from model.train import Model
+from utils.types_ import Model
 
 
 class Predictions(TypedDict):

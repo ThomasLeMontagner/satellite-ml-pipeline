@@ -15,11 +15,12 @@ from pydantic import BaseModel
 
 from constants import MODELS_DIRECTORY, TILES_DIRECTORY
 from core_pipeline.exceptions import PipelineError
-from core_pipeline.observability import MetricsRecorder, Timer, setup_logger
-from core_pipeline.tile import load_tile
+from core_pipeline.observability import MetricsRecorder, Timer
 from core_pipeline.validate import validate_raster
 from model.inferences import load_model, predict
-from model.train import Model
+from utils.data import load_tile
+from utils.logging import setup_logger
+from utils.types_ import Model
 
 logger = setup_logger("api")
 metrics = MetricsRecorder()

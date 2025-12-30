@@ -13,18 +13,17 @@ import json
 import uuid
 from pathlib import Path
 
-from constants import MODELS_DIRECTORY, TILES_DIRECTORY
+from constants import MODELS_DIRECTORY, TILES_DIRECTORY, TILES_FAILED, TILES_INFERRED
 from core_pipeline.observability import (
     MetricsRecorder,
     Timer,
     build_monitoring_metrics,
-    setup_logger,
 )
-from core_pipeline.pipeline_constants import TILES_FAILED, TILES_INFERRED
-from core_pipeline.tile import load_tile
 from core_pipeline.validate import validate_raster
 from model.health import check_model_health
 from model.inferences import Predictions, load_model, predict
+from utils.data import load_tile
+from utils.logging import setup_logger
 
 logger = setup_logger(__name__)
 metrics = MetricsRecorder()

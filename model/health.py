@@ -11,9 +11,8 @@ from __future__ import annotations
 
 from typing import TypedDict
 
-from core_pipeline.observability import setup_logger
-from core_pipeline.types_ import MonitoringMetrics
-from model.train import Model
+from utils.logging import setup_logger
+from utils.types_ import Model, MonitoringMetrics
 
 CONSIDER_RETRAINING_MODEL = "Consider retraining the model with recent data."
 
@@ -38,8 +37,8 @@ def check_model_health(
     if drift_threshold <= 0:
         raise ValueError("drift_threshold must be positive")
 
-    training_mean = model["training_mean"]
-    training_std = model["training_std"]
+    training_mean = model.get("training_mean")
+    training_std = model.get("training_std")
     live_mean = monitoring["mean_intensity"]["mean"]
     live_std = monitoring["mean_intensity"]["std"]
 
@@ -48,7 +47,9 @@ def check_model_health(
     mean_delta = monitoring["drift"]["mean_intensity_delta"]
     std_delta = monitoring["drift"]["std_intensity_delta"]
 
-    if mean_delta is not None and abs(mean_delta) > drift_threshold:
+    if training_mean is None:
+        logger.warning("Training mean missing; cannot evaluate mean intensity drift.")
+    elif mean_delta is not None and abs(mean_delta) > drift_threshold:
         drift_detected = True
         logger.warning(
             "Potential data drift detected | metric=mean_intensity | "
@@ -60,7 +61,9 @@ def check_model_health(
         )
         recommendations.append(CONSIDER_RETRAINING_MODEL)
 
-    if std_delta is not None and abs(std_delta) > drift_threshold:
+    if training_std is None:
+        logger.warning("Training std missing; cannot evaluate std intensity drift.")
+    elif std_delta is not None and abs(std_delta) > drift_threshold:
         drift_detected = True
         logger.warning(
             "Potential data drift detected | metric=std_intensity | "
