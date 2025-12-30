@@ -16,7 +16,19 @@ from utils.types_ import Model, MonitoringMetrics
 
 CONSIDER_RETRAINING_MODEL = "Consider retraining the model with recent data."
 
+DRIFT_THRESHOLD = 0.5
+FAILED_RATE_THRESHOLD = 0.02
+LATENCY_MS_THRESHOLD = 500.0
+
 logger = setup_logger(__name__)
+
+
+class RetrainingMetrics(TypedDict):
+    """Operational metrics used to decide whether retraining is warranted."""
+
+    drift_score: float  # Aggregated drift signal (higher means more drift).
+    failed_inference_rate: float  # Fraction of failed inferences in the window.
+    p95_latency_ms: float  # 95th percentile inference latency in milliseconds.
 
 
 class HealthReport(TypedDict):
@@ -28,10 +40,27 @@ class HealthReport(TypedDict):
     recommendations: list[str]
 
 
+def should_retrain(metrics: RetrainingMetrics) -> bool:
+    """Return True when operational metrics suggest scheduling retraining.
+
+    This is a documented stub for operational optimization only; it does not
+    trigger any automatic retraining.
+    """
+    drift_score = metrics.get("drift_score", 0.0)
+    failed_rate = metrics.get("failed_inference_rate", 0.0)
+    p95_latency_ms = metrics.get("p95_latency_ms", 0.0)
+
+    return (
+        drift_score >= DRIFT_THRESHOLD
+        or failed_rate >= FAILED_RATE_THRESHOLD
+        or p95_latency_ms >= LATENCY_MS_THRESHOLD
+    )
+
+
 def check_model_health(
     model: Model,
     monitoring: MonitoringMetrics,
-    drift_threshold: float = 0.5,
+    drift_threshold: float = DRIFT_THRESHOLD,
 ) -> HealthReport:
     """Compare live monitoring stats with training stats and log warnings."""
     if drift_threshold <= 0:
