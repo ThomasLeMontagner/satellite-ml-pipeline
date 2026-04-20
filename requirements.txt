@@ -4,3 +4,4 @@ numpy~=2.4.0
 pydantic~=2.12.5
 rasterio~=1.4.4
 ruff~=0.14.9
+pytest~=9.0.3
