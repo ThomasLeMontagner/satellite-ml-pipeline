@@ -65,7 +65,7 @@ The project includes a data ingestion module (`core_pipeline/ingest.py`) that do
 
 Key assumptions:
 - Raster imagery with consistent spatial resolution
-- Metadata includes CRS and acquisition time
+- Metadata includes CRS (Coordinate Reference System) and acquisition time
 - Images may be large and require tiling for efficient processing
 
 ### Tiling Process
