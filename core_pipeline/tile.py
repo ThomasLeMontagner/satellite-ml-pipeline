@@ -2,8 +2,8 @@
 Raster tiling module for satellite imagery.
 
 Key design decisions:
-- Tile raster images using fixed pixel dimensions to keep tiling simple,
-  deterministic, and independent of geographic resolution.
+- Tile raster images using fixed pixel dimensions to keep tiling simple, deterministic,
+  and independent of geographic resolution.
 - Avoid loading entire images into memory by reading windowed subsets of the raster.
 - Skip partial tiles at image boundaries to keep tile shapes uniform, which
   simplifies downstream batch processing and ML inference.
