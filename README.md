@@ -51,7 +51,7 @@ Results + metrics storage
 Two execution modes are supported:
 
 - **Batch inference** for large-scale, scheduled processing
-- **Online inference** via a stateless REST API for low-latency requests
+- **Online inference** via a stateless REST API for low-latency requests so that each request contains all the information needed to process it
 
 ---
 
